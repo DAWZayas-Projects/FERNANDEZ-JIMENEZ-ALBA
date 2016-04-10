@@ -1,5 +1,6 @@
-#
+# 
 
 # Ruby on rails
-# Ajax?
-# CRUD with pure Javascrit or React.
+# Backbone.js
+
+# Presents a map with the forest fires of Spain
