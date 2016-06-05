@@ -2,12 +2,17 @@
 <html>
 <head>
   <title>Igneum</title>
+  <%= stylesheet_link_tag    'backoffice', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'backoffice', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
-<%= render 'shared/backoffice_menu'%>
+<%= 
+	if request.env['PATH_INFO'] != '/backoffice'
+		render 'shared/backoffice_menu'
+	end
+%>
 
 <%= yield %>
 

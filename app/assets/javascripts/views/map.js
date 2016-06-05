@@ -5,24 +5,17 @@
  * @param  {Object} App Global object
  */
 
-//(function(App) {
-  //var App = App || {};
-  //App.View = App.View || {};
-
-  class Map extends Backbone.View {
+class Map extends Backbone.View {
 
     defaults() {
       return {
         setCenter: [39.555, -9.72],
         defaultZoom: 6,
         tileLayer: 'https://stamen-tiles-d.a.ssl.fastly.net/toner-background/{z}/{x}/{y}.png',
-        attributions: `&copy; "Map tiles by " <a href="http://stamen.com">Stamen Design</a>, 
-            under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. 
-            Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, 
-            under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.`,
+        attributions: ``,
         setZoom: [6, 13],
-        southWest: [34.6378936, -15.49],
-        northEast: [43.9913218, 5.3277839],
+        southWest: [35.0378936, -15.49],
+        northEast: [43.9913218, 5.0277839],
         query: "SELECT * FROM spanish_adm2_provinces",
         cartocss: `#spanish_adm2_provinces {
               polygon-fill: #000000;
@@ -34,13 +27,24 @@
       };
     }
 
+    commonOptions() {
+      return {
+        scrollWheelZoom: false,
+        tileLayer: {
+          continuousWorld: false,
+          noWrap: true
+        }
+      };
+    }
+
     initialize(options) {
       this.options = options;
       this.createMap();  
     }
 
     createMap() {
-      const map = L.map(this.options.el).
+      const self = this;
+      const map = L.map(this.options.el, this.commonOptions()).
        setView(this.options.center || this.defaults().setCenter,
        this.options.defaultZoom || this.defaults().defaultZoom);
 
@@ -54,9 +58,18 @@
         sublayers: [{
           sql: this.options.query || this.defaults().query,
           cartocss: this.options.cartocss || this.defaults().cartocss,
+          interactivity: this.options.popup ? 'nom_prov, a' : ''
         }]
       })
-      .addTo(map);
+      .addTo(map)
+      .on('done', function(layer) {
+        if(self.options.popup || false) {
+          layer.setInteraction(true);
+          layer.on('featureClick', function(e, latlng, pos, data) {
+            self.popUp(latlng, data, map);
+          });
+        }
+      });
 
       this.customizeMap(map);
     }
@@ -67,7 +80,8 @@
         subdomains: 'abcd',
         maxZoom: this.options.setZoom ? this.options.setZoom[1] : this.defaults().setZoom[1],
         minZoom: this.options.setZoom ? this.options.setZoom[0] : this.defaults().setZoom[0],
-        maxBounds: this.setBounds()
+        maxBounds: this.setBounds(),
+        scrollWheelZoom: false
       });
     }
 
@@ -78,11 +92,18 @@
       return bounds;
     }
 
+    popUp(latlng, data, map){
+      const latlng1 = L.latLng(latlng[0], latlng[1]);
+      const message = `<h1 class="text title">${data.nom_prov}</h1>
+        <span class="number">${data.a}</span><span class="text claim"> fuegos</span>`;
+
+      L.popup()
+        .setLatLng(latlng1)
+        .setContent(message)
+        .openOn(map);
+    }
+
     customizeMap(map) {}
 
   }
-
-//window.App = App;
-
-//})(window.App);
 

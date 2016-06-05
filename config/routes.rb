@@ -25,10 +25,17 @@ Rails.application.routes.draw do
   #get 'backoffice/edit', to: redirect('/')
   get 'backoffice/edit', to: 'backoffice#edit'
   get 'backoffice/add_fire', to: 'backoffice#add_fire'
-  post 'backoffice/add_fire', to: 'backoffice#edit'
-  
-  get "/auth/google_oauth2/callback", to: 'backoffice#index'
+
+  post 'backoffice/add_fire', to: 'backoffice#create_fire'
+
+  get "/auth/google_oauth2/callback", to: 'backoffice#googleAuth'
   get 'auth/failure', to: redirect('/')
+
+  get 'backoffice/show_delete', to: 'backoffice#show_delete'
+  post 'backoffice/show_delete', to: 'backoffice#delete_fire'
+
+  get 'backoffice/add_user', to: 'backoffice#add_user'
+  post 'backoffice/add_user', to: 'backoffice#create_user'
 
 
   # Example of regular route:
