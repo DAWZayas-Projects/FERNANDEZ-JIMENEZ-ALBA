@@ -5,8 +5,7 @@
  * @param  {Object} App Global object
  */
 
-class Map extends Backbone.View {
-
+  class BaseMap extends Backbone.View {
     defaults() {
       return {
         setCenter: [39.555, -9.72],
@@ -54,7 +53,7 @@ class Map extends Backbone.View {
       L.control.scale().addTo(map);
 
       cartodb.createLayer(map, {
-        user_name: 'albafjez',
+        user_name: 'igneum-test',
         type: 'cartodb',
         sublayers: [{
           sql: this.options.query || this.defaults().query,
