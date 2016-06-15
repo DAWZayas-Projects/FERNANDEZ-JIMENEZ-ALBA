@@ -27,7 +27,7 @@ App.View.Map = class Compare_map extends Map{
 
   customizeMap(map) {
     cartodb.createLayer(map, {
-      user_name: 'albafjez',
+      user_name: 'igneum-test',
       type: 'cartodb',
       sublayers: [{
         sql: this.options.markerSql || this.defaults().markerSql,
